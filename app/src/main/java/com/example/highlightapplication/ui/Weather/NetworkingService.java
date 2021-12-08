@@ -15,11 +15,9 @@ import java.util.concurrent.Executors;
 
 public class NetworkingService {
 
-
-
-
     String url = "http://gd.geobytes.com/AutoCompleteCity?&q=";
 
+    String url2 ="&appid=f59b4e088282b559b972242f999207eb";
 
     public static final ExecutorService networkingExecutor = Executors.newFixedThreadPool(4);
     static Handler networkHander = new Handler(Looper.getMainLooper());
@@ -32,7 +30,7 @@ public class NetworkingService {
     NetworkingListener listener;
 
     public void fetchCitiesData(String text) {
-        String completeURL = url + text;
+        String completeURL = url + text+ url2;
         connect(completeURL);
     }
 

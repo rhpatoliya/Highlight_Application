@@ -26,33 +26,31 @@ import java.util.ArrayList;
 public class WeatherFragment extends Fragment implements SearchView.OnQueryTextListener, NetworkingService.NetworkingListener {
     String TAG="WeatherFragment";
 
-    private WeatherViewModel weatherViewModel;
-    private FragmentWeatherBinding binding;
     WeatherAdapter adapter;
     ArrayList<GlobalCity> cities = new ArrayList<>();
     NetworkingService networkingService;
     JsonService jsonService;
     RecyclerView recyclerView;
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    SearchView search_view;
 
 
-        final SearchView search_view = binding.weatherSearchview;
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        View view = inflater.inflate(R.layout.fragment_weather, container, false);
+        // Replace 'android.R.id.list' with the 'id' of your RecyclerView
+        search_view = view.findViewById(R.id.weather_searchview);
         search_view.setOnQueryTextListener(this);
         search_view.setQueryHint("Search City for Weather");
 
 
-        View view = inflater.inflate(R.layout.weather_recyclreview, container, false);
-
-        // Replace 'android.R.id.list' with the 'id' of your RecyclerView
-        recyclerView = (RecyclerView) view.findViewById(android.R.id.list);
+        recyclerView = view.findViewById(R.id.recyclerview);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
         Log.d("debugMode", "The application stopped after this");
         recyclerView.setLayoutManager(mLayoutManager);
 
         adapter = new WeatherAdapter(cities);
         recyclerView.setAdapter(adapter);
+
         return view;
 
     }
@@ -60,7 +58,6 @@ public class WeatherFragment extends Fragment implements SearchView.OnQueryTextL
     @Override
     public boolean onQueryTextSubmit(String query) {
         Log.d("query", query);//
-
         return true;
     }
 
@@ -69,29 +66,21 @@ public class WeatherFragment extends Fragment implements SearchView.OnQueryTextL
         Log.d("query change", newText);
         if (newText.length() >= 3) {
             // seach for city
-          // networkingService.fetchCitiesData(newText);
+           networkingService.fetchCitiesData(newText);
         }
         else {
             cities = new ArrayList<>(0);
-           // adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();
         }
         return false;
     }
 
 
-
-    @Override
-
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
     @Override
     public void APINetworkListner(String jsonString) {
         Log.d("tag", jsonString);// not parsed yet.
         cities =  jsonService.parseCitiesAPIJson(jsonString);
-        Log.e(TAG,"List size="+cities.size());
+        //Log.e(TAG,"List size="+cities.size());
         adapter.notifyDataSetChanged();
     }
 }

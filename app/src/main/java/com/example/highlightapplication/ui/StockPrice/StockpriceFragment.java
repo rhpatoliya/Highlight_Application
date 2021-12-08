@@ -14,36 +14,26 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.highlightapplication.R;
 import com.example.highlightapplication.databinding.FragmentStockpriceBinding;
 
 
 public class StockpriceFragment extends Fragment implements SearchView.OnQueryTextListener {
 
-    private StockpriceViewModel slideshowViewModel;
-    private FragmentStockpriceBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                new ViewModelProvider(this).get(StockpriceViewModel.class);
+        View view = inflater.inflate(R.layout.fragment_stockprice, container, false);
 
-        binding = FragmentStockpriceBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+//        final SearchView search_view = binding.stockpriceSearchview;
+//
+//        search_view.setOnQueryTextListener(this);
+//        search_view.setQueryHint("Search City for Weather");
+//        setHasOptionsMenu(true);
 
-        final SearchView search_view = binding.stockpriceSearchview;
-
-        search_view.setOnQueryTextListener(this);
-        search_view.setQueryHint("Search City for Weather");
-        setHasOptionsMenu(true);
-
-        return root;
+        return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
