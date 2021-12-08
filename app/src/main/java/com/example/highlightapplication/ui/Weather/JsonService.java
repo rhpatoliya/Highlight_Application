@@ -1,5 +1,7 @@
 package com.example.highlightapplication.ui.Weather;
 
+import android.util.Log;
+
 import com.example.highlightapplication.GlobalCity;
 
 import org.json.JSONArray;
@@ -16,11 +18,13 @@ public class JsonService {
 //                String cityName = jsonArray.getString(i);
 //                City newCity = new City(jsonArray.getString(i));
                 allCitiesFromAPI.add(new GlobalCity(jsonArray.getString(i)));
+                Log.d("JasonService",allCitiesFromAPI.size() + "first ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        Log.d("JasonService",allCitiesFromAPI.size() + "second");
         return allCitiesFromAPI;
     }
 }

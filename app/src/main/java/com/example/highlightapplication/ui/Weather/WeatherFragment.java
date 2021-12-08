@@ -5,20 +5,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.highlightapplication.GlobalCity;
 import com.example.highlightapplication.R;
-import com.example.highlightapplication.databinding.FragmentWeatherBinding;
 
 import java.util.ArrayList;
 
@@ -34,6 +29,7 @@ public class WeatherFragment extends Fragment implements SearchView.OnQueryTextL
     SearchView search_view;
 
 
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
@@ -47,6 +43,11 @@ public class WeatherFragment extends Fragment implements SearchView.OnQueryTextL
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
         Log.d("debugMode", "The application stopped after this");
         recyclerView.setLayoutManager(mLayoutManager);
+
+        networkingService = new NetworkingService(this);
+       // networkingService.listener = this;
+      /*  networkingService = (myApp)getActivity().getNetworkingService();
+        jsonService =  (myApp)getActivity().getJsonService();*/
 
         adapter = new WeatherAdapter(cities);
         recyclerView.setAdapter(adapter);
@@ -78,9 +79,9 @@ public class WeatherFragment extends Fragment implements SearchView.OnQueryTextL
 
     @Override
     public void APINetworkListner(String jsonString) {
-        Log.d("tag", jsonString);// not parsed yet.
+        Log.d(TAG, jsonString + "= Data");// not parsed yet.
         cities =  jsonService.parseCitiesAPIJson(jsonString);
-        //Log.e(TAG,"List size="+cities.size());
+        adapter.cityList = cities;
         adapter.notifyDataSetChanged();
     }
 }

@@ -22,6 +22,11 @@ public class NetworkingService {
     public static final ExecutorService networkingExecutor = Executors.newFixedThreadPool(4);
     static Handler networkHander = new Handler(Looper.getMainLooper());
 
+    public NetworkingService(NetworkingListener networkingListener) {
+        listener = networkingListener;
+
+    }
+
     interface NetworkingListener{
         void APINetworkListner(String jsonString);
        // void APINetworkingListerForImage(Bitmap image);
@@ -30,7 +35,7 @@ public class NetworkingService {
     NetworkingListener listener;
 
     public void fetchCitiesData(String text) {
-        String completeURL = url + text+ url2;
+        String completeURL = url + text + url2;
         connect(completeURL);
     }
 
