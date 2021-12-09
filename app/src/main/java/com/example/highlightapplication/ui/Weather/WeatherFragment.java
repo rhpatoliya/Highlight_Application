@@ -1,5 +1,6 @@
 package com.example.highlightapplication.ui.Weather;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,14 +14,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.highlightapplication.GlobalCity;
+import com.example.highlightapplication.MainActivity;
 import com.example.highlightapplication.R;
 
 import java.util.ArrayList;
 
 
-public class WeatherFragment extends Fragment implements SearchView.OnQueryTextListener, NetworkingService.NetworkingListener {
+public class WeatherFragment extends Fragment implements SearchView.OnQueryTextListener,SearchView.OnCloseListener,
+        NetworkingService.NetworkingListener , WeatherAdapter.CityclickListner {
     String TAG="WeatherFragment";
 
+    Context appContext;
     WeatherAdapter adapter;
     ArrayList<GlobalCity> cities = new ArrayList<>();
     NetworkingService networkingService;
@@ -29,27 +33,23 @@ public class WeatherFragment extends Fragment implements SearchView.OnQueryTextL
     SearchView search_view;
 
 
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
         // Replace 'android.R.id.list' with the 'id' of your RecyclerView
+        appContext=getActivity();
         search_view = view.findViewById(R.id.weather_searchview);
         search_view.setOnQueryTextListener(this);
         search_view.setQueryHint("Search City for Weather");
 
 
+        networkingService = new NetworkingService(this);
+        jsonService=new JsonService();
+
+        adapter = new WeatherAdapter(appContext,cities,this);
         recyclerView = view.findViewById(R.id.recyclerview);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
-        Log.d("debugMode", "The application stopped after this");
         recyclerView.setLayoutManager(mLayoutManager);
-
-        networkingService = new NetworkingService(this);
-       // networkingService.listener = this;
-      /*  networkingService = (myApp)getActivity().getNetworkingService();
-        jsonService =  (myApp)getActivity().getJsonService();*/
-
-        adapter = new WeatherAdapter(cities);
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -61,6 +61,7 @@ public class WeatherFragment extends Fragment implements SearchView.OnQueryTextL
         Log.d("query", query);//
         return true;
     }
+
 
     @Override
     public boolean onQueryTextChange(String newText) {
@@ -77,11 +78,28 @@ public class WeatherFragment extends Fragment implements SearchView.OnQueryTextL
     }
 
 
+
     @Override
     public void APINetworkListner(String jsonString) {
         Log.d(TAG, jsonString + "= Data");// not parsed yet.
         cities =  jsonService.parseCitiesAPIJson(jsonString);
         adapter.cityList = cities;
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void cityClicked(GlobalCity selectedCity) {
+
+        MainActivity.myBundle.putString("SelectedCity", String.valueOf(selectedCity.getCityName()));
+
+        //Click methid implement here
+    }
+
+    @Override
+    public boolean onClose() {
+        cities = new ArrayList<>(0);
+        adapter.cityList=cities;
+        adapter.notifyDataSetChanged();
+        return true;
     }
 }

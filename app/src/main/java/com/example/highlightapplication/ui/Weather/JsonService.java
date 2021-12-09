@@ -10,7 +10,9 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 public class JsonService {
+    String TAG="JsonService";
     public ArrayList<GlobalCity> parseCitiesAPIJson(String jsonCities) {
+        Log.e(TAG,"Data="+jsonCities);
         ArrayList<GlobalCity> allCitiesFromAPI = new ArrayList<>(0);
         try {//
             JSONArray jsonArray = new JSONArray(jsonCities);
@@ -18,13 +20,10 @@ public class JsonService {
 //                String cityName = jsonArray.getString(i);
 //                City newCity = new City(jsonArray.getString(i));
                 allCitiesFromAPI.add(new GlobalCity(jsonArray.getString(i)));
-                Log.d("JasonService",allCitiesFromAPI.size() + "first ");
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        Log.d("JasonService",allCitiesFromAPI.size() + "second");
         return allCitiesFromAPI;
     }
 }

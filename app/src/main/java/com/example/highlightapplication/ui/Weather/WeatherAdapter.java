@@ -16,19 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder> {
-  /*  public WeatherAdapter(ArrayList<GlobalCity> cityList) {
-    }
-*/
-    interface cityClickListner {
+
+    interface CityclickListner {
         public void cityClicked(GlobalCity selectedCity);
     }
+
     private Context mCtx;
     public ArrayList<GlobalCity> cityList;
-    cityClickListner listner;
-    public WeatherAdapter(ArrayList<GlobalCity> cityList) {
-        this.mCtx = mCtx;
+    CityclickListner listner;
+
+    public WeatherAdapter(Context context,ArrayList<GlobalCity> cityList,CityclickListner cityclickListner) {
+        this.mCtx = context;
         this.cityList = cityList;
-       listner = (cityClickListner)mCtx;
+        listner = cityclickListner;
     }
 
     @Override
@@ -47,6 +47,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
     public int getItemCount() {
         return cityList.size();
     }
+
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView cityTextView, countryTextView;
         public ViewHolder(View itemView) {
@@ -56,8 +57,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         }
         @Override
         public void onClick(View view) {
-            GlobalCity city = cityList.get(getAdapterPosition());
-            //listner.cityClicked(city);
+            listner.cityClicked(cityList.get(getAdapterPosition()));
         }
     }
 }
